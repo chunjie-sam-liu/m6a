@@ -11,6 +11,9 @@ m6a
 
 
 ## Base calling parameters
+
+> **dna_r10.4.1_e8.2_260bps_sup.cfg**
+
 ### ONT parameters
 ~accuracy mode~
 
@@ -19,8 +22,6 @@ m6a
 - **Super accuracy (SUP)**
 
 ### Seq parameters
-
-**dna_r10.4.1_e8.2_260bps_sup.cfg**
 
 - kit: SQK-LSK114
 - flow cell: FLO-MIN114 (r10.4.1)
