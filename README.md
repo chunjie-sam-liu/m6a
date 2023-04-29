@@ -12,8 +12,11 @@ m6a
 - **Super accuracy (SUP)**
 
 ### Seq parameters
+
+**dna_r10.4.1_e8.2_260bps_sup.cfg**
+
 - kit: SQK-LSK114
-- flow cell: FLO-MIN114
+- flow cell: FLO-MIN114 (r10.4.1)
 - sequencer: MinION Mk1c
-- speed: default (200bps)
+- speed: accurate (260bps)
 
