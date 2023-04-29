@@ -3,6 +3,13 @@ m6a
 
 # Long read sequencing for m6A
 
+## DART-seq, _Meyer, Nature Methods, 2019_
+
+> DART-seq (deamination adjacent to RNA modification targets), in which we transiently transfected APOBEC1-YTH into cells and then subjected total RNA to high-throughput sequencing followed by C-to-U mutation detection
+
+![](imgs/DART-seq.png)
+
+
 ## Base calling parameters
 ### ONT parameters
 ~accuracy mode~
