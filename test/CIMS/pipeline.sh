@@ -50,22 +50,26 @@ for f in RBFOX2.rep1 RBFOX2.rep2 RBFOX2.rep3 RBFOX2.rep4; do
 done
 
 for f in $(ls *.trim.c.fastq.gz); do
-  c=$(zcat $f | wc -l)
-  c=$((c / 4))
-  echo $f $c
+  {
+    c=$(zcat $f | wc -l)
+    c=$((c / 4))
+    echo $f $c
+  } &
 done
 
 # Strip random barcode (UMI)
 
 for f in RBFOX2.rep1 RBFOX2.rep2 RBFOX2.rep3 RBFOX2.rep4; do
-  perl /scr1/users/liuc9/iclip/filtering/stripBarcode.pl -format fastq -len 9 $f.trim.c.fastq - | gzip -c >$f.trim.c.tag.fastq.gz &
+  perl ~/tools/anaconda3/envs/ctk/lib/ctk/stripBarcode.pl -format fastq -len 9 $f.trim.c.fastq.gz - | gzip -c >$f.trim.c.tag.fastq.gz &
 done
 
+#Get the distribution of tag lengths for diagnostic purposes using the following command.
 for f in RBFOX2.rep1 RBFOX2.rep2 RBFOX2.rep3 RBFOX2.rep4; do
   zcat $f.trim.c.tag.fastq.gz | awk '{if(NR%4==2) {print length($0)}}' | sort -n | uniq -c | awk '{print $2"\t"$1}' >$f.trim.c.tag.seqlen.stat.txt &
 done
 
 # Read mapping & parsing
+cd mapping
 for f in RBFOX2.rep1 RBFOX2.rep2 RBFOX2.rep3 RBFOX2.rep4; do
   {
     bwa aln -t 10 -n 0.06 -q 20 /mnt/isilon/xing_lab/liuc9/refdata/bwa_index/Homo_sapiens.GRCh38.104.fa ../filtering/$f.trim.c.tag.fastq.gz >$f.sai
@@ -77,6 +81,9 @@ done
 for f in RBFOX2.rep1 RBFOX2.rep2 RBFOX2.rep3 RBFOX2.rep4; do
   perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/parseAlignment.pl -v --map-qual 1 --min-len 18 --mutation-file $f.mutation.txt $f.sam.gz $f.tag.bed &
 done
+
+samtools view -bS $f.sam | samtools sort - $f.sorted
+samtools fillmd $f.sorted.bam /genomes/hg19/bwa/hg19.fa | gzip -c >$f.sorted.md.sam.gz
 
 # Collapse PCR duplicates
 
