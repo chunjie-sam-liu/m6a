@@ -15,3 +15,8 @@ conda config --env --append channels bioconda
 
 conda install --yes -c chaolinzhanglab ctk
 ```
+
+## Call PEAK from short reads
+```bash
+pipeline.sh
+```

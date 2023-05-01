@@ -28,3 +28,18 @@ m6a
 - sequencer: MinION Mk1c
 - speed: accurate (260bps)
 
+## USE CTK-CIMS to call C-to-U editing sites
+
+### Install CTK
+
+```bash
+myenv='ctk'
+conda create --yes --name $myenv
+
+conda activate $myenv
+
+conda config --env --append channels conda-forge
+conda config --env --append channels bioconda
+
+conda install --yes -c chaolinzhanglab ctk
+```
