@@ -38,7 +38,7 @@ nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/bed2rgb.pl -v -col
 
 # Step5: Annotating and visualizing CLIP tags
 # Get genomic distribution of CLIP tags
-nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/bed2annotation.pl -dbkey hg38 -ss -big -region -v -summary Fox.pool.tag.uniq.annot.summary.txt Fox.pool.tag.uniq.rgb.bed Fox.pool.tag.uniq.annot.txt >nohup.step5.out &
+nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/bed2annotation.pl -dbkey hg38 -ss -big -region -v -summary aligned.sorted.tag.uniq.annot.summary.txt aligned.sorted.tag.uniq.rgb.bed aligned.sorted.tag.uniq.annot.txt >nohup.step5.out &
 
 # Generate bedgraph for visualization in the genome browser
-nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/tag2profile.pl -v -big -ss -exact -of bedgraph -n ″Unique Tag Profile″ Fox.pool.tag.uniq.rgb.bed Fox.pool.tag.uniq.bedgraph >nohup.step5.2.out &
+nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/tag2profile.pl -v -big -ss -exact -of bedgraph -n ″Unique Tag Profile″ aligned.sorted.tag.uniq.rgb.bed aligned.sorted.tag.uniq.bedgraph >nohup.step5.2.out &
