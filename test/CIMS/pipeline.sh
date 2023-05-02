@@ -124,17 +124,20 @@ mkdir cluster
 cd cluster
 ln -s ../mapping/RBFOX2.pool.tag.uniq.rgb.bed
 # Mode 1: Peak calling with no statistical significance
-perl /usr/local/CTK/tag2peak.pl -big -ss -v --valley-seeking --valley-depth 0.9 RBFOX2.pool.tag.uniq.rgb.bed RBFOX2.pool.tag.uniq.peak.bed --out-boundary RBFOX2.pool.tag.uniq.peak.boundary.bed --out-half-PH RBFOX2.pool.tag.uniq.peak.halfPH.bed
-perl /usr/local/CTK/bed2annotation.pl -dbkey hg19 -ss -big -region -v -summary RBFOX2.pool.tag.uniq.peak.annot.summary.txt RBFOX2.pool.tag.uniq.peak.bed RBFOX2.pool.tag.uniq.peak.annot.txt
+perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/tag2peak.pl -big -ss -v --valley-seeking --valley-depth 0.9 RBFOX2.pool.tag.uniq.rgb.bed RBFOX2.pool.tag.uniq.peak.bed --out-boundary RBFOX2.pool.tag.uniq.peak.boundary.bed --out-half-PH RBFOX2.pool.tag.uniq.peak.halfPH.bed
+
+perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/bed2annotation.pl -dbkey hg38 -ss -big -region -v -summary RBFOX2.pool.tag.uniq.peak.annot.summary.txt RBFOX2.pool.tag.uniq.peak.bed RBFOX2.pool.tag.uniq.peak.annot.txt
+
 # Mode 2: Peak calling with statistical significance
-perl /usr/local/CTK/tag2peak.pl -big -ss -v --valley-seeking -p 0.05 --valley-depth 0.9 --multi-test --dbkey hg19 RBFOX2.pool.tag.uniq.rgb.bed RBFOX2.pool.tag.uniq.peak.sig.bed --out-boundary RBFOX2.pool.tag.uniq.peak.sig.boundary.bed --out-half-PH RBFOX2.pool.tag.uniq.peak.sig.halfPH.bed
+perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/tag2peak.pl -big -ss -v --valley-seeking -p 0.05 --valley-depth 0.9 --multi-test --dbkey hg38 RBFOX2.pool.tag.uniq.rgb.bed RBFOX2.pool.tag.uniq.peak.sig.bed --out-boundary RBFOX2.pool.tag.uniq.peak.sig.boundary.bed --out-half-PH RBFOX2.pool.tag.uniq.peak.sig.halfPH.bed
+
 # To get the number of significant peaks:
 wc -l RBFOX2.pool.tag.noRNA.uniq.peak.sig.bed
 # 35602 RBFOX2.pool.tag.uniq.peak.sig.bed
 #extract from -500 to +500
 awk '{print $1"\t"int(($2+$3)/2)-500"\t"int(($2+$3)/2)+500"\t"$4"\t"$5"\t"$6}' RBFOX2.pool.tag.uniq.peak.sig.bed >RBFOX2.pool.tag.uniq.peak.sig.center.ext1k.bed
 for f in RBFOX2.rep1 RBFOX2.rep2 RBFOX2.rep3 RBFOX2.rep4; do
-  perl /usr/local/CTK/tag2profile.pl -ss -region RBFOX2.pool.tag.uniq.peak.sig.boundary.bed -of bed -v $f.tag.uniq.bed $f.tag.uniq.peak.sig.boundary.count.bed
+  perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/tag2profile.pl -ss -region RBFOX2.pool.tag.uniq.peak.sig.boundary.bed -of bed -v $f.tag.uniq.bed $f.tag.uniq.peak.sig.boundary.count.bed
 done
 
 # CIMS
