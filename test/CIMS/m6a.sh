@@ -31,13 +31,14 @@ nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/tag2collapse.pl -b
 awk '{print $3-$2}' aligned.sorted.tag.uniq.bed | sort -n | uniq -c | awk '{print $2"\t"$1}' >aligned.sorted.tag.uniq.len.dist.txt
 
 # Get the mutations in unique tags
-python /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/joinWrapper.py aligned.sorted.mutation.txt aligned.sorted.tag.uniq.bed 4 4 N aligned.sorted.tag.uniq.mutation.txt
+nohup python /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/joinWrapper.py aligned.sorted.mutation.txt aligned.sorted.tag.uniq.bed 4 4 N aligned.sorted.tag.uniq.mutation.txt >nohup.step3.2.out &
 
 # Step4: Merging biological replicates
-perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/bed2rgb.pl -v -col "128,0,0" aligned.sorted.tag.uniq.bed aligned.sorted.tag.uniq.rgb.bed
+nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/bed2rgb.pl -v -col "128,0,0" aligned.sorted.tag.uniq.bed aligned.sorted.tag.uniq.rgb.bed >nohup.step4.out &
 
 # Step5: Annotating and visualizing CLIP tags
 # Get genomic distribution of CLIP tags
-perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/bed2annotation.pl -dbkey hg38 -ss -big -region -v -summary Fox.pool.tag.uniq.annot.summary.txt Fox.pool.tag.uniq.rgb.bed Fox.pool.tag.uniq.annot.txt
+nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/bed2annotation.pl -dbkey hg38 -ss -big -region -v -summary Fox.pool.tag.uniq.annot.summary.txt Fox.pool.tag.uniq.rgb.bed Fox.pool.tag.uniq.annot.txt >nohup.step5.out &
+
 # Generate bedgraph for visualization in the genome browser
-perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/tag2profile.pl -v -big -ss -exact -of bedgraph -n ″Unique Tag Profile″ Fox.pool.tag.uniq.rgb.bed Fox.pool.tag.uniq.bedgraph
+nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/tag2profile.pl -v -big -ss -exact -of bedgraph -n ″Unique Tag Profile″ Fox.pool.tag.uniq.rgb.bed Fox.pool.tag.uniq.bedgraph >nohup.step5.2.out &
