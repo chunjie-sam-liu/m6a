@@ -16,6 +16,7 @@ samtools fillmd aligned.sorted.sam /mnt/isilon/xing_lab/liuc9/refdata/bwa_index/
 # Parsing SAM file
 conda activate ctk
 
+# samtools flatstat aligned.sorted.md.sam.gz
 nohup perl /scr1/users/liuc9/tools/anaconda3/envs/ctk/lib/ctk/parseAlignment.pl -v --map-qual 1 --min-len 18 --mutation-file aligned.sorted.mutation.txt aligned.sorted.md.sam.gz aligned.sorted.tag.bed >nohup.step2.out &
 
 wc -l *.tag.bed
