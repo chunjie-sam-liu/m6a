@@ -53,3 +53,6 @@ guppy_gpu: true
 conda_wrapper: '/home/liuc9/github/espresso-internal/snakemake/conda_wrapper'
 espresso_path: '/home/liuc9/github/espresso-internal/src'
 visualization_path: '/home/liuc9/github/espresso-internal/visualization'
+conda_wrapper: '/home/liuc9/github/espresso-internal/snakemake/conda_wrapper'
+espresso_path: '/home/liuc9/github/espresso-internal/src'
+visualization_path: '/home/liuc9/github/espresso-internal/visualization'
