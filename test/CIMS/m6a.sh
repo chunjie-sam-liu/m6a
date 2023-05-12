@@ -9,6 +9,9 @@
 # after espresso-internal get the aligned.sorted.sam file
 # use samtools fillmd to get the mutation information
 
+## when use minimap2 to aligne the reads, the mutation information is not included in the sam file
+## so we need to use samtools fillmd to get the mutation information
+
 # Step1: add MD tag to SAM file
 samtools fillmd aligned.sorted.sam /mnt/isilon/xing_lab/liuc9/refdata/bwa_index/Homo_sapiens.GRCh38.104.fa | gzip -c >aligned.sorted.md.sam.gz
 
