@@ -6,3 +6,4 @@
 
 # Number of input parameters
 param=$#
+# ? we include with this release of FLARE an update of SAILOR to enable detection of all edit types.
