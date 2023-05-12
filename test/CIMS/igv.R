@@ -175,3 +175,7 @@ alTrack <- AlignmentsTrack(
   "/mnt/isilon/xing_lab/liuc9/projdata/m6a/test4m_result/alignment/M6A/0/aligned.sort.bam"
 )
 plotTracks(alTrack, chromosome = "1", from = afrom, to = ato)
+
+# hehi --------------------------------------------------------------------
+
+

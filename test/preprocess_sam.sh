@@ -24,6 +24,7 @@ samtools view -bS --threads 10 ${targetdir}/${prefix}.sam -o ${targetdir}/${pref
 samtools index -@10 ${targetdir}/${prefix}.bam
 
 # ! for test4m dataset
+# ! test4m dataset --------------------------------------------------------------------
 
 # rawsam=/mnt/isilon/xing_lab/liuc9/projdata/m6a/test4m_result/alignment/M6A/0/aligned.sorted.sam
 # genomeref=/mnt/isilon/xing_lab/liuc9/refdata/bwa_index/Homo_sapiens.GRCh38.104.fa
