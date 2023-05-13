@@ -1,0 +1,9 @@
+{
+  "samples_path": "/scr1/users/liuc9/m6a",
+  "samples": ["test4m.sorted.md.bam"],
+  "reverse_stranded": true,
+  "reference_fasta": "/mnt/isilon/xing_lab/liuc9/refdata/bwa_index/Homo_sapiens.GRCh38.104.fa",
+  "known_snps": "/mnt/isilon/xing_lab/liuc9/refdata/dbsnp/knownsnp/human_dbsnp_combined.bed3",
+  "edit_type": "CT",
+  "output_dir": "/scr1/users/liuc9/m6a"
+}
