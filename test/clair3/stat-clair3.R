@@ -28,7 +28,7 @@ future::plan(future::multisession, workers = 10)
 
 # load data ---------------------------------------------------------------
 
-anno_filename <- "/scr1/users/liuc9/m6a/merge_output.vcf.avinput.hg38_multianno.txt"
+anno_filename <- "/mnt/isilon/xing_lab/liuc9/projdata/m6a/clair3/merge_output.vcf.gz.avinput.hg38_multianno.txt"
 
 
 # body --------------------------------------------------------------------
@@ -98,16 +98,10 @@ anno_nors |>
   ) ->
   anno_nors_sel
 
-
-anno_nors_sel |> 
-  head() |> 
-  View()
-
-
-
-
-
-
+# 
+# anno_nors_sel |> 
+#   head() |> 
+#   View()
 
 anno_nors_sel |> 
   dplyr::group_by(
@@ -181,7 +175,7 @@ anno_nors_sel |>
   a
 
 a |> 
-  # dplyr::filter(mut  == "C>T") |> 
+  dplyr::filter(mut  == "C>T") |>
   ggplot(aes(x = dis)) +
   geom_density(fill = "blue", alpha = 0.5)
 

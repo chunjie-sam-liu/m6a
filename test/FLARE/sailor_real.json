@@ -1,0 +1,9 @@
+{
+  "samples_path": "/mnt/isilon/xing_lab/liuc9/projdata/m6a/mapping",
+  "samples": ["APOBEC1YTH.sorted.md.bam"],
+  "output_dir": "/mnt/isilon/xing_lab/liuc9/projdata/m6a/flare",
+  "edit_type": "CT",
+  "reverse_stranded": true,
+  "reference_fasta": "/mnt/isilon/xing_lab/liuc9/refdata/bwa_index/Homo_sapiens.GRCh38.104.fa",
+  "known_snps": "/mnt/isilon/xing_lab/liuc9/refdata/dbsnp/knownsnp/human_dbsnp_combined.bed3"
+}
