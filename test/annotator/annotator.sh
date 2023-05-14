@@ -8,8 +8,10 @@
 
 # ! https://github.com/byee4/annotator --------------------------------------------------------------------
 # /mnt/isilon/xing_lab/liuc9/refdata/ensembl/Homo_sapiens.GRCh38.107.gtf.sqlite3
-/scr1/users/liuc9/tools/annotator/annotator/annotator.py \
-  --input BED6_FILE \
-  --output OUTPUT_FILE \
-  --gtfdb gencode.v19.annotation.gtf.db \
-  --species hg19
+conda activate annotator
+
+annotator \
+  --input /scr1/users/liuc9/m6a/test4m.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed \
+  --output /scr1/users/liuc9/m6a/test4m.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed.anno \
+  --gtfdb /mnt/isilon/xing_lab/liuc9/refdata/ensembl/Homo_sapiens.GRCh38.107.gtf.sqlite3 \
+  --format ensembl
