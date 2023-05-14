@@ -180,13 +180,21 @@ a |>
   geom_density(fill = "blue", alpha = 0.5)
 
 
-flare_anno <- "/scr1/users/liuc9/m6a/test4m.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed.anno"
+flare_anno <- "/mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/APOBEC1YTH.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed.anno"
 
 d <- readr::read_tsv(
   file = flare_anno,
   col_names = F
 )
 
+
+d |> 
+  dplyr::group_by(
+    X9
+  ) |> 
+  dplyr::count() |> 
+  dplyr::ungroup() |> 
+  dplyr::arrange(-n) 
 
 
 d |> 
