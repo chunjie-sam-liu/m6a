@@ -13,6 +13,5 @@ snakemake \
   --configfile /home/liuc9/github/m6a/test/FLARE/sailor.json \
   --verbose \
   --use-singularity \
-  \
   --singularity-args '--bind /scr1/users/liuc9 --bind /mnt/isilon/xing_lab/liuc9 --bind /mnt/isilon/xing_lab' \
-  -j1 # --singularity-args '--bind /mnt/isilon/xing_lab/liuc9/refdata/bwa_index/ --bind /scr1/users/liuc9/m6a --bind /scr1/users/liuc9/m6a --bind /mnt/isilon/xing_lab/liuc9/refdata/dbsnp/knownsnp/' \
+  -j1 # singularity-prefix /home/liuc9/data/projdata/m6a/FLARE_singularity
