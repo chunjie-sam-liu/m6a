@@ -102,13 +102,88 @@ anno_nors_sel |>
   head() |> 
   View()
 
+
+
+pcc <- readr::read_tsv(file = "https://raw.githubusercontent.com/chunjie-sam-liu/chunjie-sam-liu.life/master/public/data/pcc.tsv")
+
+
+
 anno_nors_sel |> 
   dplyr::group_by(
     Func.refGene
   ) |> 
   dplyr::count() |> 
   dplyr::ungroup() |> 
-  dplyr::arrange(-n)
+  dplyr::mutate(
+    Func.refGene = factor(
+      Func.refGene,
+      levels = Func.refGene
+    )
+  ) |> 
+  dplyr::mutate(csum = rev(cumsum(rev(n)))) |> 
+  dplyr::mutate(pos = n/2 + dplyr::lead(csum, 1)) |> 
+  dplyr::mutate(pos = dplyr::if_else(is.na(pos), n/2, pos)) %>% 
+  dplyr::mutate(percentage = n/sum(n)) |> 
+  ggplot(aes(x = "", y = n, fill = Func.refGene)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  scale_fill_manual(
+    name = NULL,
+    values = pcc$color,
+  ) +
+  # scale_color_manual(
+  #   name = NULL,
+  #   values = pcc$color
+  # ) +
+  ggrepel::geom_label_repel(
+    aes(
+      y = pos,
+      # label = glue::glue("{Func.refGene}\n{n} ({scales::percent(percentage)})"), 
+      label = Func.refGene,
+      fill = Func.refGene,
+    ),
+    size = 6,
+    # fill = "white",
+    nudge_x = 1,
+    show.legend = FALSE,
+  ) +
+  coord_polar(theta = "y", start = 0) +
+  theme_void() +
+  theme(
+    plot.title = element_text(
+      # vjust = -2,
+      hjust = 0.5,
+      size = 22,
+    ),
+    legend.position = "none"
+  )
+
+
+anno_nors_sel |> nrow()
+
+anno_nors_sel |> 
+  dplyr::filter(
+    !grepl(
+      pattern = ";",
+      x = GeneDetail.refGene
+    )
+  ) |> 
+  dplyr::mutate(
+    dist = gsub(
+      pattern = "dist=",
+      replacement = "",
+      x = GeneDetail.refGene
+    )
+  ) |> 
+  # dplyr::filter(dist != ".") |> 
+  dplyr::mutate(dis = as.numeric(dist)) |> 
+  dplyr::filter(!is.na(dis)) ->
+  a
+
+a |> 
+  # dplyr::filter(mut  == "C>T") |> 
+  ggplot(aes(x = dis)) +
+  geom_density(fill = "blue", alpha = 0.5)
+
 
 # footer ------------------------------------------------------------------
 
