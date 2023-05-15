@@ -1,0 +1,11 @@
+{
+  "label": "APOBEC1YTH",
+  "output_folder": "/mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/peakcalling",
+  "stamp_sites_file": "/mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/sailor/APOBEC1YTH.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed",
+  "forward_bw": "/mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/sailor/8_bw_and_bam/APOBEC1YTH.sorted.md.bam.fwd.sorted.bw",
+  "reverse_bw": "/mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/sailor/8_bw_and_bam/APOBEC1YTH.sorted.md.bam.rev.sorted.bw",
+  "fasta": "/mnt/isilon/xing_lab/liuc9/refdata/bwa_index/Homo_sapiens.GRCh38.104.fa",
+  "regions": "/home/liuc9/data/refdata/flare/Homo_sapiens.GRCh38.107.gtf_peakcalling_regions",
+  "edit_type": "CT",
+  "bam": "/mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/sailor/8_bw_and_bam/APOBEC1YTH.sorted.md.bam_filtered_merged.sorted.bam"
+}

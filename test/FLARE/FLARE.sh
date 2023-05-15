@@ -9,7 +9,16 @@ param=$#
 
 # ! real data --------------------------------------------------------------------
 
+# ! peakcalling --------------------------------------------------------------------
+nohup snakemake \
+  --profile /home/liuc9/github/m6a/test/FLARE/profiles/peakcaller/ \
+  --configfile /home/liuc9/github/m6a/test/FLARE/peakcalling_real.json &
+
 # ! sailor --------------------------------------------------------------------
+
+nohup snakemake \
+  --profile /home/liuc9/github/m6a/test/FLARE/profiles/sailor/ \
+  --configfile /home/liuc9/github/m6a/test/FLARE/sailor_real.json &
 
 nohup snakemake \
   --snakefile /scr1/users/liuc9/tools/FLARE/workflow_sailor/Snakefile \

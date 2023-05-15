@@ -1,0 +1,8 @@
+
+snakefile: /scr1/users/liuc9/tools/FLARE/workflow_sailor/Snakefile
+verbose: true
+use-singularity: true
+singularity-args: '--bind /scr1/users/liuc9 --bind /mnt/isilon/xing_lab/liuc9 --bind /mnt/isilon/xing_lab'
+skip-script-cleanup: true
+singularity-prefix: /mnt/isilon/xing_lab/liuc9/projdata/m6a/flare_singularity
+nolock: true
