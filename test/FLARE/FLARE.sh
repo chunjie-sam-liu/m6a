@@ -9,6 +9,8 @@ param=$#
 
 # ! real data --------------------------------------------------------------------
 
+# ! sailor --------------------------------------------------------------------
+
 nohup snakemake \
   --snakefile /scr1/users/liuc9/tools/FLARE/workflow_sailor/Snakefile \
   --configfile /home/liuc9/github/m6a/test/FLARE/sailor_real.json \
@@ -17,6 +19,8 @@ nohup snakemake \
   --singularity-args '--bind /scr1/users/liuc9 --bind /mnt/isilon/xing_lab/liuc9 --bind /mnt/isilon/xing_lab' \
   --singularity-prefix /mnt/isilon/xing_lab/liuc9/projdata/m6a/flare_singularity \
   -j1 &
+
+# ! peakcalling --------------------------------------------------------------------
 
 # ! test4m --------------------------------------------------------------------
 
