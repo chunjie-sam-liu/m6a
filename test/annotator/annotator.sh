@@ -14,6 +14,8 @@ annotator \
   --input /mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/APOBEC1YTH.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed \
   --output /mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/APOBEC1YTH.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed.anno \
   --gtfdb /mnt/isilon/xing_lab/liuc9/refdata/flare/Homo_sapiens.GRCh38.107.gtf.sqlite3 \
+  --transcript-priority-file /home/liuc9/github/m6a/test/annotator/ensembl_hg38.transcript.priority.txt \
+  --gene-priority-file /home/liuc9/github/m6a/test/annotator/ensembl_hg38.gene.priority.txt \
   --format ensembl
 
 # ! https://github.com/byee4/annotator --------------------------------------------------------------------
