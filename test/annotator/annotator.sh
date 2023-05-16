@@ -12,7 +12,7 @@ conda activate annotator
 
 annotator \
   --input /mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/APOBEC1YTH.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed \
-  --output /mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/APOBEC1YTH.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed.anno \
+  --output /mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/APOBEC1YTH.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed.anno_new \
   --gtfdb /mnt/isilon/xing_lab/liuc9/refdata/flare/Homo_sapiens.GRCh38.107.gtf.sqlite3 \
   --transcript-priority-file /home/liuc9/github/m6a/test/annotator/ensembl_hg38.transcript.priority.txt \
   --gene-priority-file /home/liuc9/github/m6a/test/annotator/ensembl_hg38.gene.priority.txt \

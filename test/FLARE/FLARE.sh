@@ -19,9 +19,9 @@ nohup snakemake \
   --configfile /home/liuc9/github/m6a/test/FLARE/peakcalling_real.json \
   --verbose \
   --use-singularity \
-  --singularity-args '--bind /scr1/users/liuc9 --bind /mnt/isilon/xing_lab/liuc9 --bind /mnt/isilon/xing_lab' \
+  --singularity-args '--bind /scr1/users/liuc9 --bind /mnt/isilon/xing_lab/liuc9 --bind /mnt/isilon/xing_lab --bind /home/liuc9' \
   --singularity-prefix /mnt/isilon/xing_lab/liuc9/projdata/m6a/flare_singularity \
-  -j8 &
+  -j1 &
 
 # ! sailor --------------------------------------------------------------------
 

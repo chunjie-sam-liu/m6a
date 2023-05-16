@@ -56,6 +56,6 @@ anno |>
 
 # footer ------------------------------------------------------------------
 
-future::plan(future::sequential)
+# future::plan(future::sequential)
 
 # save image --------------------------------------------------------------
