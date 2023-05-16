@@ -1,7 +1,5 @@
 verbose: true
 notemp: false
-latency: 300
-printshellcmds: true
 snakefile: /scr1/users/liuc9/tools/FLARE/workflow_peakcaller/Snakefile
 jobs: 8
 use-singularity: true
@@ -9,4 +7,3 @@ singularity-args: '--bind /scr1/users/liuc9 --bind /mnt/isilon/xing_lab/liuc9 --
 skip-script-cleanup: true
 rerun-incomplete: true
 singularity-prefix: /mnt/isilon/xing_lab/liuc9/projdata/m6a/flare_singularity
-nolock: true
