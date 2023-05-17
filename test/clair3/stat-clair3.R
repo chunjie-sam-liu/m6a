@@ -38,57 +38,57 @@ anno <- data.table::fread(
 )
 
 
-anno |> 
+anno |>
   dplyr::mutate(
     mut = glue::glue("{Ref}>{Alt}")
-  ) |> 
+  ) |>
   # filter indel
   dplyr::filter(
     Ref %in% c("A", "G", "C", "T")
-  ) |> 
+  ) |>
   dplyr::filter(
     Alt %in% c("A", "G", "C", "T")
-  ) |> 
+  ) |>
   # filter snp in dbSNP
   dplyr::filter(
     !grepl(
       pattern = "rs",
       x = avsnp150
     )
-  ) |> 
+  ) |>
   # filter c-to-t
   dplyr::filter(
     mut %in% c("C>T", "G>A")
   ) ->
   anno_nors
 
-anno_nors |> 
+anno_nors |>
   dplyr::group_by(
     Func.refGene
-  ) |> 
-  dplyr::count() |> 
-  dplyr::ungroup() |> 
+  ) |>
+  dplyr::count() |>
+  dplyr::ungroup() |>
   dplyr::arrange(-n)
 
-# anno_nors |> 
+# anno_nors |>
 #   dplyr::group_by(
 #     Func.knownGene
-#   ) |> 
-#   dplyr::count() |> 
-#   dplyr::ungroup() |> 
+#   ) |>
+#   dplyr::count() |>
+#   dplyr::ungroup() |>
 #   dplyr::arrange(-n)
-# 
-# anno_nors |> 
+#
+# anno_nors |>
 #   dplyr::group_by(
 #     Func.ensGene
-#   ) |> 
-#   dplyr::count() |> 
-#   dplyr::ungroup() |> 
+#   ) |>
+#   dplyr::count() |>
+#   dplyr::ungroup() |>
 #   dplyr::arrange(-n)
 
-anno_nors |> 
+anno_nors |>
   dplyr::select(
-    Chr, Start, End, 
+    Chr, Start, End,
     Func.refGene,
     Gene.refGene,
     GeneDetail.refGene,
@@ -98,27 +98,27 @@ anno_nors |>
   ) ->
   anno_nors_sel
 
-# 
-# anno_nors_sel |> 
-#   head() |> 
+#
+# anno_nors_sel |>
+#   head() |>
 #   View()
 
-anno_nors_sel |> 
+anno_nors_sel |>
   dplyr::group_by(
     Func.refGene
-  ) |> 
-  dplyr::count() |> 
-  dplyr::ungroup() |> 
+  ) |>
+  dplyr::count() |>
+  dplyr::ungroup() |>
   dplyr::mutate(
     Func.refGene = factor(
       Func.refGene,
       levels = Func.refGene
     )
-  ) |> 
-  dplyr::mutate(csum = rev(cumsum(rev(n)))) |> 
-  dplyr::mutate(pos = n/2 + dplyr::lead(csum, 1)) |> 
-  dplyr::mutate(pos = dplyr::if_else(is.na(pos), n/2, pos)) %>% 
-  dplyr::mutate(percentage = n/sum(n)) |> 
+  ) |>
+  dplyr::mutate(csum = rev(cumsum(rev(n)))) |>
+  dplyr::mutate(pos = n/2 + dplyr::lead(csum, 1)) |>
+  dplyr::mutate(pos = dplyr::if_else(is.na(pos), n/2, pos)) %>%
+  dplyr::mutate(percentage = n/sum(n)) |>
   ggplot(aes(x = "", y = n, fill = Func.refGene)) +
   geom_bar(stat = "identity", width = 1, color = "white") +
   scale_fill_manual(
@@ -132,7 +132,7 @@ anno_nors_sel |>
   ggrepel::geom_label_repel(
     aes(
       y = pos,
-      # label = glue::glue("{Func.refGene}\n{n} ({scales::percent(percentage)})"), 
+      # label = glue::glue("{Func.refGene}\n{n} ({scales::percent(percentage)})"),
       label = Func.refGene,
       fill = Func.refGene,
     ),
@@ -155,26 +155,26 @@ anno_nors_sel |>
 
 anno_nors_sel |> nrow()
 
-anno_nors_sel |> 
+anno_nors_sel |>
   dplyr::filter(
     !grepl(
       pattern = ";",
       x = GeneDetail.refGene
     )
-  ) |> 
+  ) |>
   dplyr::mutate(
     dist = gsub(
       pattern = "dist=",
       replacement = "",
       x = GeneDetail.refGene
     )
-  ) |> 
-  # dplyr::filter(dist != ".") |> 
-  dplyr::mutate(dis = as.numeric(dist)) |> 
+  ) |>
+  # dplyr::filter(dist != ".") |>
+  dplyr::mutate(dis = as.numeric(dist)) |>
   dplyr::filter(!is.na(dis)) ->
   a
 
-a |> 
+a |>
   dplyr::filter(mut  == "C>T") |>
   ggplot(aes(x = dis)) +
   geom_density(fill = "blue", alpha = 0.5)
@@ -188,32 +188,32 @@ d <- readr::read_tsv(
 )
 
 
-d |> 
+d |>
   dplyr::group_by(
     X9
-  ) |> 
-  dplyr::count() |> 
-  dplyr::ungroup() |> 
-  dplyr::arrange(-n) 
+  ) |>
+  dplyr::count() |>
+  dplyr::ungroup() |>
+  dplyr::arrange(-n)
 
 
-d |> 
+d |>
   dplyr::group_by(
     X9
-  ) |> 
-  dplyr::count() |> 
-  dplyr::ungroup() |> 
-  dplyr::arrange(-n) |> 
+  ) |>
+  dplyr::count() |>
+  dplyr::ungroup() |>
+  dplyr::arrange(-n) |>
   dplyr::mutate(
     X9 = factor(
       X9,
       levels = X9
     )
-  ) |> 
-  dplyr::mutate(csum = rev(cumsum(rev(n)))) |> 
-  dplyr::mutate(pos = n/2 + dplyr::lead(csum, 1)) |> 
-  dplyr::mutate(pos = dplyr::if_else(is.na(pos), n/2, pos)) %>% 
-  dplyr::mutate(percentage = n/sum(n)) |> 
+  ) |>
+  dplyr::mutate(csum = rev(cumsum(rev(n)))) |>
+  dplyr::mutate(pos = n/2 + dplyr::lead(csum, 1)) |>
+  dplyr::mutate(pos = dplyr::if_else(is.na(pos), n/2, pos)) %>%
+  dplyr::mutate(percentage = n/sum(n)) |>
   ggplot(aes(x = "", y = n, fill = X9)) +
   geom_bar(stat = "identity", width = 1, color = "white") +
   scale_fill_manual(
@@ -227,7 +227,7 @@ d |>
   ggrepel::geom_label_repel(
     aes(
       y = pos,
-      # label = glue::glue("{X9}\n{n} ({scales::percent(percentage)})"), 
+      # label = glue::glue("{X9}\n{n} ({scales::percent(percentage)})"),
       label = X9,
       fill = X9,
     ),
@@ -248,7 +248,7 @@ d |>
   )
 
 
-d |> 
+d |>
   dplyr::filter(
     X9 %in% c("five_prime_utr", "CDS", "three_prime_utr")
   ) ->
