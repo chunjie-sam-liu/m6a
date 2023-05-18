@@ -12,6 +12,8 @@ library(ggplot2)
 library(patchwork)
 library(rlang)
 library(plyranges)
+library(BSgenome)
+library(BSgenome.Hsapiens.UCSC.hg38)
 
 # args --------------------------------------------------------------------
 
@@ -731,6 +733,190 @@ ggsave(
   width = 10,
   height = 5
 )
+
+
+
+# logo --------------------------------------------------------------------
+
+seqlevels(Hsapiens) |> head(30)
+
+
+future::plan(future::multisession, workers = 10)
+anno_region_dis_unnest |> 
+  dplyr::mutate(
+    seq = furrr::future_pmap(
+      .l = list(
+        .chrom = chrom,
+        .end = end
+      ),
+      .f = function(.chrom, .end) {
+        .chr <- glue::glue("chr{gsub('T', '', .chrom)}")
+        .point <- .end
+        .point_up <- .point - 4
+        .point_end <- .point + 4
+        .seq <- getSeq(
+          Hsapiens,
+          .chr,
+          .point_up,
+          .point_end
+        )
+      }
+    )
+  ) ->
+  anno_region_dis_unnest_seq
+future::plan(future::sequential)
+
+future::plan(future::multisession, workers = 20)
+anno_region_dis_unnest_seq |> 
+  dplyr::mutate(
+    s_seq = purrr::map2_chr(
+      .x = strand,
+      .y = seq,
+      .f = function(.x, .y) {
+        if(.x == "+") {
+          toString(
+            RNAString(.y)
+          )
+        } else {
+          toString(Biostrings::reverseComplement(
+            RNAString(.y)
+          ))
+        }
+      }
+    )
+  ) ->
+  anno_region_dis_unnest_seq_s
+future::plan(future::sequential)
+
+
+ggplot() +
+  ggseqlogo::geom_logo(
+    data = anno_region_dis_unnest_seq_s |> 
+      dplyr::pull(s_seq_p), 
+    method = "prob"
+  ) +
+  theme(
+    panel.background = element_blank(),
+    axis.line = element_line(
+      color = "black"
+    ),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.text = element_text(
+      color = "black",
+      size = 12,
+      face = "bold"
+    ),
+    axis.title = element_text(
+      color = "black",
+      size = 14,
+      face = "bold"
+    )
+  ) ->
+  p_seqlogo;p_seqlogo
+
+
+ggsave(
+  filename = "seqlogo-plot-motif.pdf",
+  plot = p_seqlogo,
+  device = "pdf",
+  path = "/home/liuc9/github/m6a/test/FLARE/plots",
+  width = 10,
+  height = 4
+)
+
+
+ggplot() +
+  ggseqlogo::geom_logo(
+    data = anno_region_dis_unnest_seq_s |>
+      dplyr::filter(t > 1) |> 
+      dplyr::pull(s_seq), 
+    method = "prob"
+  ) +
+  theme(
+    panel.background = element_blank(),
+    axis.line = element_line(
+      color = "black"
+    ),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.text = element_text(
+      color = "black",
+      size = 12,
+      face = "bold"
+    ),
+    axis.title = element_text(
+      color = "black",
+      size = 14,
+      face = "bold"
+    )
+  ) ->
+  p_seqlogo_t1
+
+
+ggsave(
+  filename = "seqlogo-plot-motif-t1.pdf",
+  plot = p_seqlogo_t1,
+  device = "pdf",
+  path = "/home/liuc9/github/m6a/test/FLARE/plots",
+  width = 10,
+  height = 4
+)
+
+
+
+ggplot() +
+  ggseqlogo::geom_logo(
+    data = anno_region_dis_unnest_seq_s |>
+      dplyr::mutate(
+        ac = substr(x = s_seq, start = 4, stop = 5)
+      ) |> 
+      dplyr::filter(ac == "AC") |> 
+      dplyr::filter(t > 1) |>
+      dplyr::pull(s_seq), 
+    method = "prob"
+  ) +
+  theme(
+    panel.background = element_blank(),
+    axis.line = element_line(
+      color = "black"
+    ),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.text = element_text(
+      color = "black",
+      size = 12,
+      face = "bold"
+    ),
+    axis.title = element_text(
+      color = "black",
+      size = 14,
+      face = "bold"
+    )
+  ) ->
+  p_seqlogo_ac;p_seqlogo_ac
+
+
+ggsave(
+  filename = "seqlogo-plot-motif-ac-t1.pdf",
+  plot = p_seqlogo_ac,
+  device = "pdf",
+  path = "/home/liuc9/github/m6a/test/FLARE/plots",
+  width = 10,
+  height = 4
+)
+
+# AC plot -----------------------------------------------------------------
+
+
+anno_region_dis_unnest_seq_s |>
+  dplyr::mutate(
+    ac = substr(x = s_seq, start = 4, stop = 5)
+  ) |> 
+  dplyr::filter(ac == "AC") ->
+  anno_region_dis_unnest_seq_s_ac
+
+
 
 # test --------------------------------------------------------------------
 
