@@ -16,6 +16,7 @@ library(rlang)
 
 
 anno_file <- "/mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/sailor/APOBEC1YTH.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed.anno"
+# anno_file <- "/scr1/users/liuc9/m6a/test4m.sorted.md.bam.combined.readfiltered.formatted.varfiltered.snpfiltered.ranked.bed.anno"
 
 # src ---------------------------------------------------------------------
 
@@ -27,11 +28,11 @@ anno_file <- "/mnt/isilon/xing_lab/liuc9/projdata/m6a/flare/sailor/APOBEC1YTH.so
 # function ----------------------------------------------------------------
 
 fn_dis <- function(.start, .strand, .gene_id, .gene_region, .overlapping) {
-  # .start <- anno_region$start[[6]]
-  # .strand <- anno_region$strand[[6]]
-  # .gene_id <- anno_region$gene_id[[6]]
-  # .gene_region <- anno_region$gene_region[[6]]
-  # .overlapping <-anno_region$overlapping[[6]]
+  # .start <- anno_region$start[[1]]
+  # .strand <- anno_region$strand[[1]]
+  # .gene_id <- anno_region$gene_id[[1]]
+  # .gene_region <- anno_region$gene_region[[1]]
+  # .overlapping <-anno_region$overlapping[[1]]
   
   strsplit(
     x = .overlapping,
@@ -43,51 +44,75 @@ fn_dis <- function(.start, .strand, .gene_id, .gene_region, .overlapping) {
     purrr::map(.f = function(.x) {
       data.frame(t(.x))
     }) |> 
-    dplyr::bind_rows() ->
+    dplyr::bind_rows() |> 
+    dplyr::mutate(
+      X2 = as.numeric(X2),
+      X3 = as.numeric(X3)
+    ) ->
     .d
   
   colnames(.d) <- c("transcript_id","region_start", "region_stop", "strand", "region", "gene_id", "gene_name", "transcript_type", "gene_type", "feature")
+  
+  .d |> 
+    dplyr::filter(
+      region == "transcript"
+    ) |> 
+    dplyr::mutate(
+      transcript_length = abs(region_start - region_stop)
+    ) |> 
+    dplyr::select(
+      transcript_id,
+      transcript_length
+    ) ->
+    .dt
   
   
   .d |> 
     dplyr::filter(
       feature == "feature_contains_query",
-      # transcript_type == "protein_coding"
+      strand == .strand
     ) |> 
     dplyr::filter(
-      strand == .strand,
       region == .gene_region
-      # region == "transcript"
     ) |> 
-    dplyr::mutate(
-      region_start = as.numeric(region_start),
-      region_stop = as.numeric(region_stop)
+    dplyr::select(
+      transcript_id,
+      region_start,
+      region_stop,
+      strand,
+      region
+    ) |> 
+    dplyr::distinct() |> 
+    dplyr::left_join(
+      .dt,
+      by = "transcript_id"
     ) ->
     .dd
   
   
   .dd |> 
     dplyr::mutate(
-      dis = abs(.start - region_start)
+      rel_locl = abs(.start - region_start),
+      feature_size = abs(region_stop - region_start)
     ) |> 
     dplyr::mutate(
-      ratio = dis / abs(region_stop - region_start)
+      ratio = rel_locl / feature_size
+    ) |> 
+    dplyr::mutate(
+      ratio = dplyr::case_match(
+        region,
+        "five_prime_utr" ~ ratio + 0,
+        "CDS" ~ ratio + 1,
+        "three_prime_utr" ~ ratio + 2
+      )
+    ) |> 
+    dplyr::select(
+      transcript_id,
+      rel_locl,
+      feature_size,
+      ratio,
+      transcript_length
     )
-
-  
-  # .dd
-  # if(.strand == "+") {
-  #   .r1 <- min(.dd$region_start)
-  #   .r2 <- max(.dd$region_stop)
-  #   # .dis <- .start - .r1
-  # } else {
-  #   .r1 <- max(.dd$region_start)
-  #   .r2 <- min(.dd$region_stop)
-  #   # .dis <- .start - .r1
-  # }
-  # 
-  # .dis <- abs(.start - .r1) / abs(.r1 - .r2)
-  # .dis
 }
 
 # load data ---------------------------------------------------------------
@@ -95,23 +120,73 @@ col_names <- c(
   "chrom",
   "start",
   "end",
-  "name",
-  "score",
+  "confidence",
+  "edit",
   "strand",
   "gene_id",
   "gene_name",
   "gene_region",
   "overlapping"
 )
-anno <- data.table::fread(
+anno <- readr::read_tsv(
   file=anno_file,
-  sep="\t",
-  col.names = col_names
-)
+  col_names = col_names,
+  col_types = readr::cols(
+    edit = "c"
+  )
+) |> 
+  tidyr::separate(
+    col = edit,
+    into = c("t", "c"),
+    sep = ",",
+    convert = T
+  ) |> 
+  dplyr::mutate(
+    edit_ct_ratio = t/c
+  )
+
+
 
 # body --------------------------------------------------------------------
 
+
+
+# dis ---------------------------------------------------------------------
+
 anno |> 
+  dplyr::filter(
+    gene_region %in% c("CDS", "three_prime_utr", "five_prime_utr")
+  )  ->
+  anno_region
+
+future::plan(future::multisession, workers = 20)
+anno_region |> 
+  dplyr::mutate(
+    dis = furrr::future_pmap(
+      .l = list(
+        .start = start,
+        .strand = strand,
+        .gene_id = gene_id,
+        .gene_region = gene_region,
+        .overlapping = overlapping
+      ),
+      .f = fn_dis
+    )
+  ) |> 
+  dplyr::select(-overlapping) |> 
+  tibble::as_tibble() ->
+  anno_region_dis
+future::plan(future::sequential)
+
+
+# plot --------------------------------------------------------------------
+
+
+anno |> 
+  # dplyr::filter(
+  #   t > 2,
+  #   edit_ct_ratio > 0.05
+  # ) |>
   dplyr::group_by(gene_region) |> 
   dplyr::count() |> 
   dplyr::ungroup() |> 
@@ -169,7 +244,7 @@ anno |>
     ),
     legend.position = "none"
   ) ->
-  p_pie
+  p_pie;p_pie
 
 ggsave(
   filename = "pie-plot-c-to-u-distribution.pdf",
@@ -180,75 +255,48 @@ ggsave(
   height = 9
 )
 
-
-# dis ---------------------------------------------------------------------
-
-anno |> 
-  dplyr::filter(
-    gene_region %in% c("CDS", "three_prime_utr", "five_prime_utr")
-  )  ->
-  anno_region
-
 future::plan(future::multisession, workers = 10)
-anno_region |> 
+anno_region_dis |> 
   dplyr::mutate(
-    # dis = purrr::pmap(
-    dis = furrr::future_pmap(
-      .l = list(
-        .start = start,
-        .strand = strand,
-        .gene_id = gene_id,
-        .gene_region = gene_region,
-        .overlapping = overlapping
-      ),
-      .f = fn_dis
+    dis = furrr::future_map(
+      .x = dis,
+      .f = function(.x) {
+        .x |> 
+          dplyr::slice_max(
+            transcript_length
+          )
+      }
     )
-  ) ->
-  anno_region_dis
+  ) |> 
+  tidyr::unnest(cols = dis) ->
+  anno_region_dis_unnest
 future::plan(future::sequential)
 
-# anno_region_dis |> 
-#   dplyr::filter(gene_region == "CDS") ->
-#   .m
-# .m$dis |> summary()
 
-anno_region_dis |> 
-  # dplyr::filter(gene_region == "CDS") |> 
-  as.data.frame() |> 
+anno_region_dis_unnest |> 
+  dplyr::group_by(
+    gene_region
+  ) |> 
+  dplyr::summarise(s = mean(feature_size))
+
+# annotation error
+anno_region_dis_unnest |> 
+  # dplyr::filter(
+  #   # confidence > 0,
+  #   t > 2,
+  #   edit_ct_ratio > 0.05
+  # ) |> 
   ggplot(aes(
-    x = dis
-  )) +
-  geom_histogram()
-
-# anno_region_dis |> 
-#   dplyr::select(gene_region, dis) |> 
-#   ggplot(aes(x = dis, y = gene_region)) +
-#   ggridges::geom_density_ridges()
-#   geom_boxplot()
-
-  
-anno_region_dis |> 
-  dplyr::select(gene_region, dis) |> 
-  tibble::as_tibble() |> 
-  tidyr::unnest(cols = dis) |> 
-  dplyr::mutate(
-    ratio_new = dplyr::case_match(
-      gene_region,
-      "five_prime_utr" ~ ratio + 0,
-      "CDS" ~ ratio + 1,
-      "three_prime_utr" ~ ratio + 2
-    )
-  ) ->
-  anno_region_dis_new
-
-anno_region_dis_new |> 
-  as.data.frame() |> 
-  # dplyr::filter(gene_region != "three_prime_utr") |> 
-  ggplot(aes(
-    x = ratio_new
+    x = ratio
   )) +
   geom_density()
 
+
+anno_region_dis_unnest |> 
+  ggplot(aes(
+    x = ratio
+  )) +
+  geom_density()
 
 
 
